@@ -1,7 +1,7 @@
 # Projet Oculus Mars
 
 **Élèves :** Corentin BIENASSIS <[corbienassis@ensc.fr](mailto:corbienassis@ensc.fr)> et Thibaud LAURENT <[thilaurent@ensc.fr](mailto:thilaurent@ensc.fr)><br/>
-**Tuteurs ENSC :** Jean-Marc Salotti <[jean-marc.salotti@ensc.fr](mailto:jean-marc.salotti@ensc.fr)><br/>
+**Tuteur ENSC :** Jean-Marc Salotti <[jean-marc.salotti@ensc.fr](mailto:jean-marc.salotti@ensc.fr)><br/>
 **Tuteur partenaire :** Association Planète Mars
 
 ## I - Contexte
