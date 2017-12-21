@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
 
-public class Planet : MonoBehaviour
+public class Mission : MonoBehaviour
 {
-    public GameObject test = null;
+    public const string DEFAULT_DESCRIPTION = "###";
+    public const string DEFAULT_LOCATION_NAME = "Unkown location";
 
-	public void Start()
+    public uint id = 1;
+    [Multiline]
+    public string description = DEFAULT_DESCRIPTION;
+    [Range(1, 3)]
+    public uint difficulty = 1;
+
+    public string locationName = DEFAULT_LOCATION_NAME;
+    public Vector2 locationCoordinates;
+
+    public void Start()
     {
-        Vector3 position = GetSphereToLocal(new Vector2(0, 0), 40);
-        Instantiate(test, position, Quaternion.Euler(Vector3.zero));
+        //Vector3 position = GetSphereToLocal(new Vector2(0, 0), 40);
+        //Instantiate(test, position, Quaternion.Euler(Vector3.zero));
 	}
 
+    /*
     public Vector2 GetMercatorToSphere(float x, float y, float radius = 1)
     {
         float longitude = (radius > 0) ? x / radius : 0;
@@ -24,4 +35,5 @@ public class Planet : MonoBehaviour
         float z = radius * Mathf.Sin(coordinates.y);
         return new Vector3(x, y, z);
     }
+    */
 }
