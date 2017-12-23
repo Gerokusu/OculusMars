@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class GUIMission : MonoBehaviour
 {
     public const uint DEFAULT_SIZE_WIDTH_MIN = 300;
@@ -36,8 +35,8 @@ public class GUIMission : MonoBehaviour
     {
         if(rectTransform != null)
         {
-            rectTransform.sizeDelta = new Vector2(Mathf.Clamp(rectTransform.sizeDelta.x, minSize.x, maxSize.x), Mathf.Clamp(rectTransform.sizeDelta.y, minSize.y, maxSize.y));
-            rectTransform.position = new Vector3(Screen.width * screenX - rectTransform.sizeDelta.x / 2, Screen.height * screenY - rectTransform.sizeDelta.y / 2);
+            //rectTransform.sizeDelta = new Vector2(Mathf.Clamp(rectTransform.sizeDelta.x, minSize.x, maxSize.x), Mathf.Clamp(rectTransform.sizeDelta.y, minSize.y, maxSize.y));
+            //rectTransform.position = new Vector3(Screen.width * screenX - rectTransform.sizeDelta.x / 2, Screen.height * screenY - rectTransform.sizeDelta.y / 2);
 
             if(selectedMission != null)
             {
