@@ -2,10 +2,10 @@
 
 public class PlanetSpin : MonoBehaviour
 {
-    public int RotationSpeed = 1;
+    public int rotationSpeed = 1;
 
     public void FixedUpdate()
     {
-        transform.Rotate(0, -RotationSpeed * Time.deltaTime, 0);
-	}
+        transform.Rotate(0, -rotationSpeed * Time.deltaTime, 0);
+    }
 }

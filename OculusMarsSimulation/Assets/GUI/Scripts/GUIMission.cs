@@ -4,27 +4,22 @@ using UnityEngine.UI;
 
 public class GUIMission : MonoBehaviour
 {
-    public const uint DEFAULT_SIZE_WIDTH_MIN = 300;
-    public const uint DEFAULT_SIZE_HEIGHT_MIN = 300;
-    public const uint DEFAULT_SIZE_WIDTH_MAX = 1000;
-    public const uint DEFAULT_SIZE_HEIGHT_MAX = 1000;
     public const string DEFAULT_GUITEXT_NUMBER_FORMAT = "#{0}";
     public const char DEFAULT_GUITEXT_DIFFICULTY_CHAR = '✦';
+    public const string DEFAULT_GUICURSOR_CAPTION_FORMAT = "//{0}";
 
     public RectTransform rectTransform;
     public Text guiTextTitle;
     public Text guiTextID;
     public Text guiTextDescription;
     public Text guiTextDifficulty;
+    public GUICursor guiCursor;
 
-    [Range(0, 1)]
-    public float screenX = 0.5F;
-    [Range(0, 1)]
-    public float screenY = 0.5F;
-    public Vector2 minSize = new Vector2(DEFAULT_SIZE_WIDTH_MIN, DEFAULT_SIZE_HEIGHT_MIN);
-    public Vector2 maxSize = new Vector2(DEFAULT_SIZE_WIDTH_MAX, DEFAULT_SIZE_HEIGHT_MAX);
-
+    public PlanetHub planet;
+    public int selectedMissionIndex;
     public Mission selectedMission;
+
+    private bool isShifting = false;
 
     public void Start()
     {
@@ -35,31 +30,74 @@ public class GUIMission : MonoBehaviour
     {
         if(rectTransform != null)
         {
-            //rectTransform.sizeDelta = new Vector2(Mathf.Clamp(rectTransform.sizeDelta.x, minSize.x, maxSize.x), Mathf.Clamp(rectTransform.sizeDelta.y, minSize.y, maxSize.y));
-            //rectTransform.position = new Vector3(Screen.width * screenX - rectTransform.sizeDelta.x / 2, Screen.height * screenY - rectTransform.sizeDelta.y / 2);
-
             if(selectedMission != null)
             {
-                if(guiTextTitle != null)
+                int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
+                if (shift != 0)
                 {
-                    guiTextTitle.text = selectedMission.locationName;
+                    if (!isShifting)
+                    {
+                        isShifting = true;
+                        MissionChange(selectedMissionIndex + shift);
+                    }
                 }
-
-                if (guiTextID != null)
+                else
                 {
-                    guiTextID.text = string.Format(DEFAULT_GUITEXT_NUMBER_FORMAT, selectedMission.id.ToString("000"));
-                }
-
-                if (guiTextDescription != null)
-                {
-                    guiTextDescription.text = selectedMission.description;
-                }
-
-                if (guiTextDifficulty != null)
-                {
-                    guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.difficulty);
+                    isShifting = false;
                 }
             }
+            else
+            {
+                MissionChange(0);
+            }
+
+            MissionUpdate();
         }
 	}
+
+    public void MissionChange(int index)
+    {
+        if(planet != null)
+        {
+            Mission[] missions = planet.GetComponentsInChildren<Mission>();
+            int indexRelative = (index + missions.Length) % missions.Length;
+            if (missions.Length > 0)
+            {
+                selectedMissionIndex = indexRelative;
+                selectedMission = missions[indexRelative];
+            }
+        }
+    }
+
+    public void MissionUpdate()
+    {
+        if (selectedMission != null)
+        {
+            if (guiTextTitle != null)
+            {
+                guiTextTitle.text = selectedMission.locationName;
+            }
+
+            if (guiTextID != null)
+            {
+                guiTextID.text = string.Format(DEFAULT_GUITEXT_NUMBER_FORMAT, selectedMission.id.ToString("000"));
+            }
+
+            if (guiTextDescription != null)
+            {
+                guiTextDescription.text = selectedMission.description;
+            }
+
+            if (guiTextDifficulty != null)
+            {
+                guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.difficulty);
+            }
+
+            if (guiCursor != null)
+            {
+                guiCursor.target = selectedMission.transform;
+                guiCursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, selectedMission.locationName.ToUpper().Replace(" ", "_"));
+            }
+        }
+    }
 }
