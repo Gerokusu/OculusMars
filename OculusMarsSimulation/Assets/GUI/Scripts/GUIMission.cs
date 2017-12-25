@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIMission : MonoBehaviour
+public class GUIMission : AnimatableBehaviour
 {
     public const string DEFAULT_GUITEXT_NUMBER_FORMAT = "#{0}";
     public const char DEFAULT_GUITEXT_DIFFICULTY_CHAR = '✦';
@@ -16,26 +16,31 @@ public class GUIMission : MonoBehaviour
     public GUICursor guiCursor;
     public GUIButton guiButtonPrevious;
     public GUIButton guiButtonNext;
+    public GUIButton guiButtonLaunch;
+    public float guiButtonPressAmplitude;
 
+    public Transform cameraTransform;
     public PlanetHub planet;
     public int selectedMissionIndex;
     public Mission selectedMission;
 
     private bool isShifting = false;
+    private bool isLoading = false;
+    private bool isFinished = false;
 
-    public void Start()
+    public override void OnStart()
     {
         rectTransform = GetComponent<RectTransform>();
     }
 	
-	public void Update()
+	public override void OnUpdate()
     {
         if(rectTransform != null)
         {
             if(selectedMission != null)
             {
                 int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
-                if (shift != 0)
+                if (shift != 0 && !isLoading)
                 {
                     if((guiButtonPrevious == null || !guiButtonPrevious.isAnimating) && (guiButtonNext == null || !guiButtonNext.isAnimating))
                     {
@@ -50,6 +55,11 @@ public class GUIMission : MonoBehaviour
                 {
                     isShifting = false;
                 }
+
+                if (Input.GetButtonDown("FormAccept") || isLoading)
+                {
+                    MissionAccept();
+                }
             }
             else
             {
@@ -59,6 +69,16 @@ public class GUIMission : MonoBehaviour
             MissionUpdate();
         }
 	}
+
+    public void ButtonPress(GUIButton button)
+    {
+        if (button != null)
+        {
+            RectTransform canvas = transform.parent.GetComponent<RectTransform>();
+            button.animationAmplitude = Mathf.Abs((transform.localPosition.x + button.transform.localPosition.x) / (canvas.sizeDelta.x)) * -guiButtonPressAmplitude;
+            button.Animate();
+        }
+    }
 
     public void MissionChange(int index, GUIButton linked = null)
     {
@@ -71,13 +91,25 @@ public class GUIMission : MonoBehaviour
                 selectedMissionIndex = indexRelative;
                 selectedMission = missions[indexRelative];
             }
-            
-            if (linked != null)
+
+            ButtonPress(linked);
+        }
+    }
+
+    public void MissionAccept()
+    {
+        if(isLoading)
+        {
+            if (guiCursor != null && !guiCursor.isFaded)
             {
-                RectTransform canvas = transform.parent.GetComponent<RectTransform>();
-                float amplitude = Mathf.Abs((transform.localPosition.x + linked.transform.localPosition.x) / (canvas.sizeDelta.x));
-                linked.AnimatePress(0.2F, amplitude * - 25);
+                guiCursor.Animate();
+                Animate();
             }
+        }
+        else
+        {
+            ButtonPress(guiButtonLaunch);
+            isLoading = true;
         }
     }
 
@@ -111,5 +143,19 @@ public class GUIMission : MonoBehaviour
                 guiCursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, selectedMission.locationName.ToUpper().Replace(" ", "_"));
             }
         }
+    }
+
+    public override void OnAnimationWork()
+    {
+        if(cameraTransform != null)
+        {
+            animationAcceleration -= Time.deltaTime / animationLength / 2;
+            cameraTransform.localPosition = new Vector3(animationCurrent * animationAmplitude, cameraTransform.localPosition.y, cameraTransform.localPosition.z);
+        }
+    }
+
+    public override void OnAnimationEnd()
+    {
+        isFinished = true;
     }
 }
