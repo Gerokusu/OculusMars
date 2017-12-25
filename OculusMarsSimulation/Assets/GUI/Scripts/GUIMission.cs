@@ -14,6 +14,8 @@ public class GUIMission : MonoBehaviour
     public Text guiTextDescription;
     public Text guiTextDifficulty;
     public GUICursor guiCursor;
+    public GUIButton guiButtonPrevious;
+    public GUIButton guiButtonNext;
 
     public PlanetHub planet;
     public int selectedMissionIndex;
@@ -35,10 +37,13 @@ public class GUIMission : MonoBehaviour
                 int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
                 if (shift != 0)
                 {
-                    if (!isShifting)
+                    if((guiButtonPrevious == null || !guiButtonPrevious.isAnimating) && (guiButtonNext == null || !guiButtonNext.isAnimating))
                     {
-                        isShifting = true;
-                        MissionChange(selectedMissionIndex + shift);
+                        if (!isShifting)
+                        {
+                            isShifting = true;
+                            MissionChange(selectedMissionIndex + shift, (shift < 0) ? guiButtonPrevious : guiButtonNext);
+                        }
                     }
                 }
                 else
@@ -55,7 +60,7 @@ public class GUIMission : MonoBehaviour
         }
 	}
 
-    public void MissionChange(int index)
+    public void MissionChange(int index, GUIButton linked = null)
     {
         if(planet != null)
         {
@@ -65,6 +70,13 @@ public class GUIMission : MonoBehaviour
             {
                 selectedMissionIndex = indexRelative;
                 selectedMission = missions[indexRelative];
+            }
+            
+            if (linked != null)
+            {
+                RectTransform canvas = transform.parent.GetComponent<RectTransform>();
+                float amplitude = Mathf.Abs((transform.localPosition.x + linked.transform.localPosition.x) / (canvas.sizeDelta.x));
+                linked.AnimatePress(0.2F, amplitude * - 25);
             }
         }
     }

@@ -16,12 +16,13 @@ public class GUICursor : MonoBehaviour
     {
         if(target != null)
         {
+            
             RectTransform canvas = transform.parent.GetComponent<RectTransform>();
-            Vector2 uiOffset = new Vector2(canvas.sizeDelta.x / 2.0F, canvas.sizeDelta.y / 2.0F);
             Vector2 positionViewport = Camera.main.WorldToViewportPoint(target.position);
-
-            Vector2 position = new Vector2(positionViewport.x * canvas.sizeDelta.x, positionViewport.y * canvas.sizeDelta.y);
-            transform.localPosition = position - uiOffset;
+            Vector2 position = new Vector2(positionViewport.x * canvas.sizeDelta.x, positionViewport.y * canvas.sizeDelta.y) - new Vector2(canvas.sizeDelta.x / 2.0F, canvas.sizeDelta.y / 2.0F);
+            transform.localPosition = new Vector3(position.x, position.y, transform.localPosition.z);
+            
+            //transform.position = target.position;
         }
 
         if(guiBackground != null && guiTextCaption != null)
