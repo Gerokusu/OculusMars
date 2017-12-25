@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GUIButton : AnimatableBehaviour
+public class GUIButton : Animatable
 {
     public override void OnAnimationWork()
     {

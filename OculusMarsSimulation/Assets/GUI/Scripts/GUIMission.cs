@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIMission : AnimatableBehaviour
+public class GUIMission : MonoBehaviour
 {
     public const string DEFAULT_GUITEXT_NUMBER_FORMAT = "#{0}";
     public const char DEFAULT_GUITEXT_DIFFICULTY_CHAR = '✦';
+    public const string DEFAULT_GUICURSOR_NAME = "GUICursor{0}";
     public const string DEFAULT_GUICURSOR_CAPTION_FORMAT = "//{0}";
 
     public RectTransform rectTransform;
@@ -13,13 +14,14 @@ public class GUIMission : AnimatableBehaviour
     public Text guiTextID;
     public Text guiTextDescription;
     public Text guiTextDifficulty;
-    public GUICursor guiCursor;
     public GUIButton guiButtonPrevious;
     public GUIButton guiButtonNext;
     public GUIButton guiButtonLaunch;
     public float guiButtonPressAmplitude;
 
-    public Transform cameraTransform;
+    public GUICursor guiCursorPrefab;
+
+    public Navigator cameraNavigator;
     public PlanetHub planet;
     public int selectedMissionIndex;
     public Mission selectedMission;
@@ -28,12 +30,24 @@ public class GUIMission : AnimatableBehaviour
     private bool isLoading = false;
     private bool isFinished = false;
 
-    public override void OnStart()
+    public void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+
+        if (planet != null && guiCursorPrefab != null)
+        {
+            foreach (Mission mission in planet.GetComponentsInChildren<Mission>())
+            {
+                GUICursor cursor = Instantiate(guiCursorPrefab);
+                cursor.transform.SetParent(transform.parent, false);
+                cursor.name = string.Format(DEFAULT_GUICURSOR_NAME, mission.locationName.ToUpper().Replace(" ", ""));
+                cursor.target = mission.transform;
+                cursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, mission.locationName.ToUpper().Replace(" ", "_"));
+            }
+        }
     }
 	
-	public override void OnUpdate()
+	public void Update()
     {
         if(rectTransform != null)
         {
@@ -42,7 +56,7 @@ public class GUIMission : AnimatableBehaviour
                 int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
                 if (shift != 0 && !isLoading)
                 {
-                    if((guiButtonPrevious == null || !guiButtonPrevious.isAnimating) && (guiButtonNext == null || !guiButtonNext.isAnimating))
+                    if((guiButtonPrevious == null || !guiButtonPrevious.isAnimating) && (guiButtonNext == null || !guiButtonNext.isAnimating) && (cameraNavigator == null || !cameraNavigator.isAnimating))
                     {
                         if (!isShifting)
                         {
@@ -91,6 +105,14 @@ public class GUIMission : AnimatableBehaviour
                 selectedMissionIndex = indexRelative;
                 selectedMission = missions[indexRelative];
             }
+            
+            if (cameraNavigator != null && !cameraNavigator.isAnimating)
+            {
+                cameraNavigator.selectedMission = selectedMission;
+                cameraNavigator.Animate();
+            }
+
+            isShifting = cameraNavigator.isAnimating;
 
             ButtonPress(linked);
         }
@@ -100,11 +122,17 @@ public class GUIMission : AnimatableBehaviour
     {
         if(isLoading)
         {
+            /*
             if (guiCursor != null && !guiCursor.isFaded)
             {
-                guiCursor.Animate();
-                Animate();
+                PlanetSpin planetSpin = planet.GetComponent<PlanetSpin>();
+                if(planetSpin != null)
+                {
+                    planetSpin.rotationSpeed = 0;
+                    guiCursor.Animate();
+                }
             }
+            */
         }
         else
         {
@@ -136,26 +164,6 @@ public class GUIMission : AnimatableBehaviour
             {
                 guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.difficulty);
             }
-
-            if (guiCursor != null)
-            {
-                guiCursor.target = selectedMission.transform;
-                guiCursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, selectedMission.locationName.ToUpper().Replace(" ", "_"));
-            }
         }
-    }
-
-    public override void OnAnimationWork()
-    {
-        if(cameraTransform != null)
-        {
-            animationAcceleration -= Time.deltaTime / animationLength / 2;
-            cameraTransform.localPosition = new Vector3(animationCurrent * animationAmplitude, cameraTransform.localPosition.y, cameraTransform.localPosition.z);
-        }
-    }
-
-    public override void OnAnimationEnd()
-    {
-        isFinished = true;
     }
 }

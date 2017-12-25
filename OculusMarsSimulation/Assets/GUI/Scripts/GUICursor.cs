@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GUICursor : AnimatableBehaviour
+public class GUICursor : Animatable
 {
     public Transform target;
     public RectTransform guiBackground;

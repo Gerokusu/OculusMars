@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AnimatableBehaviour : MonoBehaviour
+public class Animatable : MonoBehaviour
 {
     public bool isAnimating = false;
 
