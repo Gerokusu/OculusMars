@@ -24,7 +24,7 @@ public class GUIMission : MonoBehaviour
     public Navigator cameraNavigator;
     public PlanetHub planet;
     public int selectedMissionIndex;
-    public Mission selectedMission;
+    public PlanetMission selectedMission;
 
     private bool isShifting = false;
     private bool isLoading = false;
@@ -36,13 +36,13 @@ public class GUIMission : MonoBehaviour
 
         if (planet != null && guiCursorPrefab != null)
         {
-            foreach (Mission mission in planet.GetComponentsInChildren<Mission>())
+            foreach (PlanetMission planetMission in planet.GetComponentsInChildren<PlanetMission>())
             {
                 GUICursor cursor = Instantiate(guiCursorPrefab);
                 cursor.transform.SetParent(transform.parent, false);
-                cursor.name = string.Format(DEFAULT_GUICURSOR_NAME, mission.locationName.ToUpper().Replace(" ", ""));
-                cursor.target = mission.transform;
-                cursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, mission.locationName.ToUpper().Replace(" ", "_"));
+                cursor.name = string.Format(DEFAULT_GUICURSOR_NAME, planetMission.mission.locationName.ToUpper().Replace(" ", ""));
+                cursor.target = planetMission.transform;
+                cursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_"));
             }
         }
     }
@@ -98,7 +98,7 @@ public class GUIMission : MonoBehaviour
     {
         if(planet != null)
         {
-            Mission[] missions = planet.GetComponentsInChildren<Mission>();
+            PlanetMission[] missions = planet.GetComponentsInChildren<PlanetMission>();
             int indexRelative = (index + missions.Length) % missions.Length;
             if (missions.Length > 0)
             {
@@ -147,22 +147,22 @@ public class GUIMission : MonoBehaviour
         {
             if (guiTextTitle != null)
             {
-                guiTextTitle.text = selectedMission.locationName;
+                guiTextTitle.text = selectedMission.mission.locationName;
             }
 
             if (guiTextID != null)
             {
-                guiTextID.text = string.Format(DEFAULT_GUITEXT_NUMBER_FORMAT, selectedMission.id.ToString("000"));
+                guiTextID.text = string.Format(DEFAULT_GUITEXT_NUMBER_FORMAT, selectedMission.mission.id.ToString("000"));
             }
 
             if (guiTextDescription != null)
             {
-                guiTextDescription.text = selectedMission.description;
+                guiTextDescription.text = selectedMission.mission.description;
             }
 
             if (guiTextDifficulty != null)
             {
-                guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.difficulty);
+                guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.mission.difficulty);
             }
         }
     }

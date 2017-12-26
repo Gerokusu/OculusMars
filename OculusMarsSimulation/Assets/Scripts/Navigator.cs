@@ -3,7 +3,7 @@
 public class Navigator : Animatable
 {
     public Transform planet;
-    public Mission selectedMission;
+    public PlanetMission selectedMission;
     public Vector2 positionInitialPlanet = new Vector2(0, 0);
     private Vector3 positionInitialVectorUp = new Vector3(0, 1, 0);
 
@@ -29,7 +29,7 @@ public class Navigator : Animatable
         {
             animationCurrent = isOnPlanet ? animationCurrent : 1;
 
-            Vector2 positionPlanet = Vector2.Lerp(positionInitialPlanet, selectedMission.locationCoordinates, animationCurrent);
+            Vector2 positionPlanet = Vector2.Lerp(positionInitialPlanet, selectedMission.mission.locationCoordinates, animationCurrent);
             transform.localPosition = GetMercatorToSphere(positionPlanet.x, positionPlanet.y, 0.75F);
 
             isOnPlanet = true;
@@ -38,7 +38,7 @@ public class Navigator : Animatable
 
     public override void OnAnimationEnd()
     {
-        positionInitialPlanet = selectedMission.locationCoordinates;
+        positionInitialPlanet = selectedMission.mission.locationCoordinates;
     }
     
     public static Vector3 GetMercatorToSphere(float i, float j, float radius)
