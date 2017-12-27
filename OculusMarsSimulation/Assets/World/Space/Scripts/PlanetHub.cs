@@ -13,7 +13,7 @@ public class PlanetHub : MonoBehaviour
             {
                 PlanetMission planetMission = Instantiate(planetMissionPrefab);
                 planetMission.transform.parent = transform;
-                planetMission.transform.localPosition = Navigator.GetMercatorToSphere(mission.locationCoordinates.x, mission.locationCoordinates.y, 0.5F);
+                planetMission.transform.localPosition = PlanetNavigator.GetMercatorToSphere(mission.locationCoordinates.x, mission.locationCoordinates.y, 0.5F);
                 planetMission.transform.LookAt(transform);
                 planetMission.mission = mission;
             }

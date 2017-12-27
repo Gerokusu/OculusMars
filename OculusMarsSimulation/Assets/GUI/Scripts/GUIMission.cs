@@ -2,167 +2,92 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIMission : MonoBehaviour
+public class GUIMission : Interactable
 {
-    public const string DEFAULT_GUITEXT_NUMBER_FORMAT = "#{0}";
-    public const char DEFAULT_GUITEXT_DIFFICULTY_CHAR = '✦';
-    public const string DEFAULT_GUICURSOR_NAME = "GUICursor{0}";
-    public const string DEFAULT_GUICURSOR_CAPTION_FORMAT = "//{0}";
-
-    public RectTransform rectTransform;
+    public const char DEFAULT_STRING_GUITEXT_DIFFICULTY_CHAR = '✦';
+    public const string DEFAULT_STRING_GUITEXT_NUMBER_FORMAT = "#{0}";
+    public const string DEFAULT_STRING_GUICURSOR_NAME = "GUICursor{0}";
+    public const string DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT = "//{0}";
+    
     public Text guiTextTitle;
     public Text guiTextID;
     public Text guiTextDescription;
     public Text guiTextDifficulty;
+
     public GUIButton guiButtonPrevious;
     public GUIButton guiButtonNext;
     public GUIButton guiButtonLaunch;
-    public float guiButtonPressAmplitude;
 
     public GUICursor guiCursorPrefab;
 
-    public Navigator cameraNavigator;
-    public PlanetHub planet;
-    public int selectedMissionIndex;
-    public PlanetMission selectedMission;
-
-    private bool isShifting = false;
-    private bool isLoading = false;
-    private bool isFinished = false;
+    public PlanetNavigator planetNavigator;
 
     public void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
+        animatables.AddRange(new Animatable[] { planetNavigator, guiButtonPrevious, guiButtonNext, guiButtonLaunch });
 
-        if (planet != null && guiCursorPrefab != null)
+        if (planetNavigator != null && planetNavigator.planetHub != null && guiCursorPrefab != null)
         {
-            foreach (PlanetMission planetMission in planet.GetComponentsInChildren<PlanetMission>())
+            foreach (PlanetMission planetMission in planetNavigator.planetHub.GetComponentsInChildren<PlanetMission>())
             {
                 GUICursor cursor = Instantiate(guiCursorPrefab);
                 cursor.transform.SetParent(transform.parent, false);
-                cursor.name = string.Format(DEFAULT_GUICURSOR_NAME, planetMission.mission.locationName.ToUpper().Replace(" ", ""));
+                cursor.name = string.Format(DEFAULT_STRING_GUICURSOR_NAME, planetMission.mission.locationName.ToUpper().Replace(" ", ""));
                 cursor.target = planetMission.transform;
-                cursor.guiTextCaption.text = string.Format(DEFAULT_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_"));
+                cursor.SetCaption(string.Format(DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_")));
             }
         }
     }
 	
 	public void Update()
     {
-        if(rectTransform != null)
+        if (planetNavigator.selectedMission != null && CanInteract())
         {
-            if(selectedMission != null)
+            int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
+            if (shift != 0)
             {
-                int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
-                if (shift != 0 && !isLoading)
-                {
-                    if((guiButtonPrevious == null || !guiButtonPrevious.isAnimating) && (guiButtonNext == null || !guiButtonNext.isAnimating) && (cameraNavigator == null || !cameraNavigator.isAnimating))
-                    {
-                        if (!isShifting)
-                        {
-                            isShifting = true;
-                            MissionChange(selectedMissionIndex + shift, (shift < 0) ? guiButtonPrevious : guiButtonNext);
-                        }
-                    }
-                }
-                else
-                {
-                    isShifting = false;
-                }
+                planetNavigator.SetMission(planetNavigator.selectedMissionIndex + shift);
 
-                if (Input.GetButtonDown("FormAccept") || isLoading)
+                GUIButton pressed = (shift < 0) ? guiButtonPrevious : guiButtonNext;
+                if (pressed != null)
                 {
-                    MissionAccept();
+                    RectTransform canvas = transform.parent.GetComponent<RectTransform>();
+                    pressed.direction = (shift < 0) ? pressed.transform.forward : new Vector3(0, 0, 1);
+                    pressed.Animate();
                 }
             }
-            else
-            {
-                MissionChange(0);
-            }
 
-            MissionUpdate();
+            if (Input.GetButtonDown("FormAccept"))
+            {
+                guiButtonLaunch.Animate();
+            }
         }
+
+        Refresh();
 	}
-
-    public void ButtonPress(GUIButton button)
+    
+    public void Refresh()
     {
-        if (button != null)
-        {
-            RectTransform canvas = transform.parent.GetComponent<RectTransform>();
-            button.animationAmplitude = Mathf.Abs((transform.localPosition.x + button.transform.localPosition.x) / (canvas.sizeDelta.x)) * -guiButtonPressAmplitude;
-            button.Animate();
-        }
-    }
-
-    public void MissionChange(int index, GUIButton linked = null)
-    {
-        if(planet != null)
-        {
-            PlanetMission[] missions = planet.GetComponentsInChildren<PlanetMission>();
-            int indexRelative = (index + missions.Length) % missions.Length;
-            if (missions.Length > 0)
-            {
-                selectedMissionIndex = indexRelative;
-                selectedMission = missions[indexRelative];
-            }
-            
-            if (cameraNavigator != null && !cameraNavigator.isAnimating)
-            {
-                cameraNavigator.selectedMission = selectedMission;
-                cameraNavigator.Animate();
-            }
-
-            isShifting = cameraNavigator.isAnimating;
-
-            ButtonPress(linked);
-        }
-    }
-
-    public void MissionAccept()
-    {
-        if(isLoading)
-        {
-            /*
-            if (guiCursor != null && !guiCursor.isFaded)
-            {
-                PlanetSpin planetSpin = planet.GetComponent<PlanetSpin>();
-                if(planetSpin != null)
-                {
-                    planetSpin.rotationSpeed = 0;
-                    guiCursor.Animate();
-                }
-            }
-            */
-        }
-        else
-        {
-            ButtonPress(guiButtonLaunch);
-            isLoading = true;
-        }
-    }
-
-    public void MissionUpdate()
-    {
-        if (selectedMission != null)
+        if (planetNavigator.selectedMission != null)
         {
             if (guiTextTitle != null)
             {
-                guiTextTitle.text = selectedMission.mission.locationName;
+                guiTextTitle.text = planetNavigator.selectedMission.mission.locationName;
             }
 
             if (guiTextID != null)
             {
-                guiTextID.text = string.Format(DEFAULT_GUITEXT_NUMBER_FORMAT, selectedMission.mission.id.ToString("000"));
+                guiTextID.text = string.Format(DEFAULT_STRING_GUITEXT_NUMBER_FORMAT, planetNavigator.selectedMission.mission.id.ToString("000"));
             }
 
             if (guiTextDescription != null)
             {
-                guiTextDescription.text = selectedMission.mission.description;
+                guiTextDescription.text = planetNavigator.selectedMission.mission.description;
             }
 
             if (guiTextDifficulty != null)
             {
-                guiTextDifficulty.text = new String(DEFAULT_GUITEXT_DIFFICULTY_CHAR, (int)selectedMission.mission.difficulty);
+                guiTextDifficulty.text = new String(DEFAULT_STRING_GUITEXT_DIFFICULTY_CHAR, (int)planetNavigator.selectedMission.mission.difficulty);
             }
         }
     }

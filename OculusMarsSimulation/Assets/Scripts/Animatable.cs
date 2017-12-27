@@ -7,39 +7,25 @@ public class Animatable : MonoBehaviour
     protected Vector3 positionInitial;
     protected Vector3 rotationInitial;
 
-    protected float animationCurrent;
     public float animationLength;
     public float animationAmplitude;
     public float animationAcceleration = 1;
 
-    public void Start()
-    {
-        OnStart();
-    }
-
+    public float animationCurrent;
+    
     public void Update()
     {
         if (isAnimating && animationLength > 0)
         {
             animationCurrent += Time.deltaTime / animationLength * animationAcceleration;
-            if(animationCurrent < 1)
-            {
-                OnAnimationWork();
-            }
-            else
+            if(animationCurrent >= 1)
             {
                 isAnimating = false;
-                OnAnimationEnd();
+                transform.localPosition = positionInitial;
+                transform.localRotation = Quaternion.Euler(rotationInitial);
             }
         }
-
-        OnUpdate();
     }
-
-    public virtual void OnStart() { }
-    public virtual void OnUpdate() { }
-    public virtual void OnAnimationWork() { }
-    public virtual void OnAnimationEnd() { }
 
     public void Animate()
     {

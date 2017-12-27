@@ -2,13 +2,18 @@
 
 public class GUIButton : Animatable
 {
-    public override void OnAnimationWork()
+    public Vector3 direction;
+
+    public void Start()
     {
-        transform.localPosition = positionInitial - transform.forward * Mathf.Sin(animationCurrent * Mathf.PI) * animationAmplitude;
+        direction = transform.forward;
     }
 
-    public override void OnAnimationEnd()
+    public void LateUpdate()
     {
-        transform.localPosition = positionInitial;
+        if (isAnimating)
+        {
+            transform.localPosition = positionInitial - direction * Mathf.Sin(animationCurrent * Mathf.PI) * animationAmplitude;
+        }
     }
 }

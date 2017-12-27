@@ -5,7 +5,7 @@ public class PlanetTime : MonoBehaviour
     public const uint DEFAULT_INT_SECONDS_IN_HOURS = 3600;
     public const uint DEFAULT_INT_SECONDS_IN_MINUTES = 60;
     public const uint DEFAULT_INT_MINUTES_IN_HOURS = 60;
-
+    
     public uint dayHours = 24;
     public uint dayMinutes = 0;
     public uint daySeconds = 0;
