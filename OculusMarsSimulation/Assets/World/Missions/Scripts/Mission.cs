@@ -13,4 +13,6 @@ public class Mission : MonoBehaviour
 
     public string locationName = DEFAULT_LOCATION_NAME;
     public Vector2 locationCoordinates;
+
+    public int locationScene;
 }

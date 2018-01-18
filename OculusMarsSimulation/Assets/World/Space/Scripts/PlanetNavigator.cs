@@ -19,7 +19,7 @@ public class PlanetNavigator : Animatable
         if (planetHub != null && selectedMission != null)
         {
             Vector2 positionPlanet = Vector2.Lerp(positionInitialPlanet, selectedMission.mission.locationCoordinates, animationCurrent);
-            transform.localPosition = GetMercatorToSphere(positionPlanet.x, positionPlanet.y, 0.75F);
+            transform.localPosition = GetMercatorToSphere(positionPlanet.x, positionPlanet.y, 1.1F);
             transform.LookAt(planetHub.transform, Vector3.Lerp(positionInitialVectorUp, selectedMission.transform.up, animationCurrent));
 
             if(!isAnimating)

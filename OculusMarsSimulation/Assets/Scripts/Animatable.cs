@@ -10,6 +10,7 @@ public class Animatable : MonoBehaviour
     public float animationLength;
     public float animationAmplitude;
     public float animationAcceleration = 1;
+    public string animationType;
 
     public float animationCurrent;
     
@@ -27,7 +28,7 @@ public class Animatable : MonoBehaviour
         }
     }
 
-    public void Animate()
+    public void Animate(string type = "")
     {
         if(!isAnimating)
         {
@@ -35,6 +36,7 @@ public class Animatable : MonoBehaviour
             positionInitial = transform.localPosition;
             rotationInitial = transform.localRotation.eulerAngles;
             animationCurrent = 0;
+            animationType = type;
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GUIButton : Animatable
 {
     public Vector3 direction;
+    public Text caption;
 
     public void Start()
     {
