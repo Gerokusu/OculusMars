@@ -4,10 +4,11 @@ public class PlanetMission : MonoBehaviour
 {
     public Mission mission;
 
+    public int timeHour = 0;
+    public int timeMinute = 0;
+    public int timeSeconds = 0;
+
     private float time = 0;
-    private int timeHour = 0;
-    private int timeMinute = 0;
-    private int timeSeconds = 0;
 
     public void Update()
     {

@@ -966,7 +966,7 @@ internal static class OVRPlugin
 					return inputFocus == Bool.True;
 				else
 				{
-					Debug.LogWarning("ovrp_GetAppHasInputFocus return " + result);
+					//Debug.LogWarning("ovrp_GetAppHasInputFocus return " + result);
 					return false;
 				}
 			}
