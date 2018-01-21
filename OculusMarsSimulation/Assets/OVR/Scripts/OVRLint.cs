@@ -346,7 +346,7 @@ public class OVRLint : EditorWindow
 		var lights = GameObject.FindObjectsOfType<Light> ();
 		for (int i = 0; i < lights.Length; ++i) 
 		{
-			if (lights [i].type != LightType.Directional && !lights [i].isBaked && IsLightBaked(lights[i]))
+			if (lights [i].type != LightType.Directional && !lights[i].bakingOutput.isBaked && IsLightBaked(lights[i]))
 			{
 				AddFix ("Optimize Light Baking", "For GPU performance, please bake lightmaps to avoid realtime lighting cost.", delegate(UnityEngine.Object obj, bool last, int selected) 
 				{

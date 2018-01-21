@@ -6,7 +6,7 @@ public class GUIBackground : MonoBehaviour
     private Image guiImage;
     private Text guiCaption;
 
-    public bool adaptImageToText = true;
+    public bool canGrow = false;
 
     public void Start()
     {
@@ -21,7 +21,7 @@ public class GUIBackground : MonoBehaviour
             float offset = guiCaption.rectTransform.localPosition.x;
             float width = LayoutUtility.GetPreferredWidth(guiCaption.rectTransform);
             guiCaption.rectTransform.sizeDelta = new Vector2(width, guiCaption.rectTransform.sizeDelta.y);
-            if (!adaptImageToText)
+            if (canGrow)
             {
                 guiImage.rectTransform.sizeDelta = new Vector2(width + offset * 2, guiImage.rectTransform.sizeDelta.y);
             }

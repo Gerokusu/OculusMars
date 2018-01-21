@@ -75,7 +75,6 @@ public class GUIMission : Interactable
                     GUIButton pressed = (shift < 0) ? guiButtonPrevious : guiButtonNext;
                     if (pressed != null)
                     {
-                        RectTransform canvas = transform.parent.GetComponent<RectTransform>();
                         pressed.direction = (shift < 0) ? pressed.transform.forward : new Vector3(0, 0, 1);
                         pressed.Animate();
                     }

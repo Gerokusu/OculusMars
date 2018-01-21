@@ -29,9 +29,9 @@ public class SettlementAirlockDecompression : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.E) && state == AirlockState.Ambient)
         {
-            doorIn.GetComponent<SettlementAirlockDoor>().CloseDoor();
-            doorIn.GetComponent<SettlementAirlockDoor>().LockDoor();
-            StartCoroutine( DecompressAirlock() );
+            //doorIn.GetComponent<SettlementAirlockDoor>().CloseDoor();
+            //doorIn.GetComponent<SettlementAirlockDoor>().LockDoor();
+            //StartCoroutine( DecompressAirlock() );
         }
     }
 
