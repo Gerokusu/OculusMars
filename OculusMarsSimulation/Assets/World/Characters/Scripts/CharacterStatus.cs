@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 public class CharacterStatus : MonoBehaviour
 {
+    public static readonly string DEFAULT_STRING_GUICAPTION_TIME_FORMAT = "{0}:{1}:{2}";
+    public static readonly string DEFAULT_STRING_GUICAPTION_TEMP_FORMAT = "{0}°C";
+    public static readonly string DEFAULT_STRING_GUICAPTION_PRSS_FORMAT = "{0}bar";
+    public static readonly string DEFAULT_STRING_GUICAPTION_MASS_FORMAT = "{0}KG";
     public static readonly string DEFAULT_STRING_GUICAPTION_ITEM_FORMAT = "{0} <{1} KG>";
     public static readonly string DEFAULT_STRING_GUICAPTION_ITEMMASS_FORMAT = "<{0} KG>";
 
@@ -15,17 +19,17 @@ public class CharacterStatus : MonoBehaviour
     public Text guiCaptionItemMass;
     public GUICursor guiCursorItemAimed;
 
-    [Range(0, 1)]
-    public float consumptionOxygenPerSecond;
+    public PlanetTime planetTime;
 
-    private int hour;
-    private int minute;
-    private int second;
-    private float temperature;
-    private float pressure;
-    private float mass;
+    private float time;
+    public float temperature;
+    public float pressure;
+    public float mass;
     private float oxygen;
     private float oxygenMaximum;
+
+    [Range(0, 1)]
+    public float oxygenConsumptionPerSecond;
 
     private CharacterInteraction characterInteraction;
 
@@ -39,17 +43,50 @@ public class CharacterStatus : MonoBehaviour
     
     public void Update()
     {
-        oxygen -= (oxygen > 0) ? consumptionOxygenPerSecond * Time.deltaTime : 0;
+        if(planetTime != null)
+        {
+            time = planetTime.GetCurrentTime();
+        }
+        oxygen -= (oxygen > 0) ? oxygenConsumptionPerSecond * Time.deltaTime : 0;
 
         Refresh();
     }
 
     public void Refresh()
     {
-        if(guiCaptionOxygen != null)
+        if (guiCaptionHour != null && planetTime != null)
+        {
+            string hourUnit = Mathf.RoundToInt(planetTime.GetCurrentHour(time)).ToString("00");
+            string minuteUnit = Mathf.RoundToInt(planetTime.GetCurrentMinute(time)).ToString("00");
+            string secondUnit = Mathf.RoundToInt(planetTime.GetCurrentSecond(time)).ToString("00");
+            guiCaptionHour.text = string.Format(DEFAULT_STRING_GUICAPTION_TIME_FORMAT, hourUnit, minuteUnit, secondUnit);
+        }
+
+        if (guiCaptionTemp != null)
+        {
+            string temperatureSign = (temperature >= 0) ? "+" : "";
+            string temperatureUnit = string.Format("{0:00}", Mathf.RoundToInt(temperature));
+            guiCaptionTemp.text = string.Format(DEFAULT_STRING_GUICAPTION_TEMP_FORMAT, temperatureSign + temperatureUnit);
+        }
+
+        if (guiCaptionPressure != null)
+        {
+            string pressureUnit = string.Format("{0:0.000}", pressure);
+            guiCaptionPressure.text = string.Format(DEFAULT_STRING_GUICAPTION_PRSS_FORMAT, pressureUnit);
+        }
+
+        if (guiCaptionMass != null)
+        {
+            uint massItem = (characterInteraction != null && characterInteraction.itemGrabbed != null) ? characterInteraction.itemGrabbed.mass : 0;
+
+            string massUnit = string.Format("{0:00}", Mathf.RoundToInt(mass + massItem));
+            guiCaptionMass.text = string.Format(DEFAULT_STRING_GUICAPTION_MASS_FORMAT, massUnit);
+        }
+
+        if (guiCaptionOxygen != null)
         {
             float height = (oxygen > 0) ? oxygen * oxygenMaximum : 0;
-            guiCaptionOxygen.rectTransform.sizeDelta = new Vector2(guiCaptionOxygen.rectTransform.sizeDelta.x, height);
+            guiCaptionOxygen.rectTransform.sizeDelta = new Vector2(guiCaptionOxygen.rectTransform.sizeDelta.x, Mathf.RoundToInt(height));
         }
 
         if (guiCursorItemAimed != null && characterInteraction != null)

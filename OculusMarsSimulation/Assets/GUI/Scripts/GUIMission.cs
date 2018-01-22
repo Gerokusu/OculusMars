@@ -48,6 +48,7 @@ public class GUIMission : Interactable
                 cursor.target = planetMission.transform;
                 if(cursor.guiBackground != null)
                 {
+                    Debug.Log(string.Format(DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_")));
                     cursor.guiBackground.SetCaption(string.Format(DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_")));
                 }
                 guiCursorsInstances.Add(cursor);

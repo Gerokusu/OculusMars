@@ -4,11 +4,30 @@ public class CharacterMovement : MonoBehaviour
 {
     public static readonly string DEFAULT_STRING_INPUT_MOVE_HORIZONTAL = "MoveHorizontal";
     public static readonly string DEFAULT_STRING_INPUT_MOVE_VERTICAL = "MoveVertical";
+    public static readonly string DEFAULT_STRING_INPUT_LOOK_HORIZONTAL = "LookHorizontal";
+    public static readonly string DEFAULT_STRING_INPUT_LOOK_VERTICAL = "LookVertical";
 
-    public uint speedWalking = 1;
+    public uint walkingSpeed = 1;
+    private float walkingAnimation = 0;
 
-	public void Update()
+    public Transform cameraTransform;
+    public uint cameraSensivity = 1;
+
+    public void Update()
     {
-        transform.Translate(new Vector3(Input.GetAxis(DEFAULT_STRING_INPUT_MOVE_HORIZONTAL) * speedWalking, 0, Input.GetAxis(DEFAULT_STRING_INPUT_MOVE_VERTICAL) * speedWalking) * Time.deltaTime);
-	}
+        Vector3 translation = new Vector3(Input.GetAxis(DEFAULT_STRING_INPUT_MOVE_HORIZONTAL) * walkingSpeed, 0, Input.GetAxis(DEFAULT_STRING_INPUT_MOVE_VERTICAL) * walkingSpeed);
+        transform.Translate(translation * Time.deltaTime);
+
+        Vector3 rotation = new Vector3(0, Input.GetAxis(DEFAULT_STRING_INPUT_LOOK_HORIZONTAL) * cameraSensivity, 0);
+        transform.Rotate(rotation * Time.deltaTime);
+
+        if (cameraTransform != null)
+        {
+            walkingAnimation += Time.deltaTime * walkingSpeed / 2.0F;
+
+            float walkingAnimationCurrent = (Mathf.Sin(walkingAnimation * Mathf.PI) + 0.5F) * translation.magnitude * 0.03F; ;
+            cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, walkingAnimationCurrent, cameraTransform.localPosition.z);
+            cameraTransform.Rotate(new Vector3(Input.GetAxis(DEFAULT_STRING_INPUT_LOOK_VERTICAL) * -cameraSensivity, 0, 0) * Time.deltaTime);
+        }
+    }
 }

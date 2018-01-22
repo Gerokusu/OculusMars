@@ -10,18 +10,40 @@ public class PlanetTime : MonoBehaviour
     public uint dayMinutes = 0;
     public uint daySeconds = 0;
 
-    private ulong time;
+    public float time;
     private ulong timeMax;
+
+    public float rotationSpeed = 1;
+    public Vector3 rotationAxis = new Vector3(0, 1, 0);
+    private Vector3 rotationInitial;
+
+    public Material skyboxMaterial;
+    public float skyboxExposureStart;
+    public float skyboxExposureEnd;
 
     public void Start()
     {
         timeMax = dayHours * DEFAULT_INT_SECONDS_IN_HOURS + dayMinutes * DEFAULT_INT_SECONDS_IN_MINUTES + daySeconds;
+        rotationInitial = transform.rotation.eulerAngles;
     }
 
     public void Update()
     {
-        float rotation = (360 - transform.localRotation.eulerAngles.y) / 360;
-        time = (ulong)Mathf.FloorToInt(rotation * timeMax + timeMax) % (uint)timeMax;
+        time = (time + Time.deltaTime * rotationSpeed) % (uint)timeMax;
+        
+        float timeScaled = time / timeMax;
+        transform.rotation = Quaternion.Euler(rotationInitial);
+        transform.Rotate(rotationAxis, timeScaled * 360, Space.World);
+
+        if (skyboxMaterial != null)
+        {
+            skyboxMaterial.SetFloat("_Exposure", Mathf.Lerp(skyboxExposureStart, skyboxExposureEnd, Mathf.Sin(timeScaled * Mathf.PI)));
+        }
+    }
+
+    public float GetCurrentTime()
+    {
+        return (time % (uint)timeMax) / timeMax;
     }
 
     public float GetCurrentTime(float angle)

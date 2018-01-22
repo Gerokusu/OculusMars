@@ -8,7 +8,7 @@ public class GUIBackground : MonoBehaviour
 
     public bool canGrow = false;
 
-    public void Start()
+    public void Awake()
     {
         guiImage = GetComponent<Image>();
         guiCaption = GetComponentInChildren<Text>();
