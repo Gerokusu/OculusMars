@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlanetNavigator : Animatable
+public class PlanetNavigator : MonoBehaviour
 {
     public PlanetHub planetHub;
     public PlanetMission selectedMission;
@@ -18,6 +18,7 @@ public class PlanetNavigator : Animatable
     {
         if (planetHub != null && selectedMission != null)
         {
+            /*
             Vector2 positionPlanet = Vector2.Lerp(positionInitialPlanet, selectedMission.mission.locationCoordinates, animationCurrent);
             transform.localPosition = GetMercatorToSphere(positionPlanet.x, positionPlanet.y, 1.1F);
             transform.LookAt(planetHub.transform, Vector3.Lerp(positionInitialVectorUp, selectedMission.transform.up, animationCurrent));
@@ -27,7 +28,7 @@ public class PlanetNavigator : Animatable
                 positionInitial = transform.localPosition;
                 positionInitialPlanet = selectedMission.mission.locationCoordinates;
                 positionInitialVectorUp = selectedMission.transform.up;
-            }
+            }*/
         }
     }
 
@@ -42,10 +43,12 @@ public class PlanetNavigator : Animatable
                 selectedMissionIndex = indexRelative;
                 selectedMission = missions[indexRelative];
 
+                /*
                 if(isAnimated)
                 {
                     Animate();
                 }
+                */
             }
         }
     }

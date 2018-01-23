@@ -16,23 +16,30 @@ public class CharacterInteraction : MonoBehaviour
 
     private Transform itemGrabbedParent;
 
+    private bool isTriggeredLeft = false;
+    private bool isTriggeredRight = false;
+
     public void Update()
     {
         if(controllerCenter != null)
         {
             GetAimed(controllerLeft);
-            if(itemAimed == null)
+            if(itemAimed == null && triggerAimed == null)
             {
                 GetAimed(controllerRight);
             }
 
-            bool isLeftPressed = Input.GetButtonDown("InteractLeft") && controllerLeftButton != null && !controllerLeftButton.isAnimating;
+            bool triggerLeft = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0 && !isTriggeredLeft);
+            isTriggeredLeft = (triggerLeft) ? true : (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0);
+            bool isLeftPressed = (Input.GetButtonDown("InteractLeft") || triggerLeft) && controllerLeftButton != null && !controllerLeftButton.isAnimating;
             if (isLeftPressed)
             {
                 controllerLeftButton.Animate();
             }
 
-            bool isRightPressed = Input.GetButtonDown("InteractRight") && controllerRightButton != null && !controllerRightButton.isAnimating;
+            bool triggerRight = (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0 && !isTriggeredRight);
+            isTriggeredRight = (triggerRight) ? true : (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0);
+            bool isRightPressed = (Input.GetButtonDown("InteractRight") || triggerRight) && controllerRightButton != null && !controllerRightButton.isAnimating;
             if (isRightPressed)
             {
                 controllerRightButton.Animate();

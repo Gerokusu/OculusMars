@@ -33,11 +33,17 @@ public class GUIMission : Interactable
 
     private int sceneToLoad;
 
+    private bool isTriggeredLeft = false;
+    private bool isTriggeredRight = false;
+
     public void Start()
     {
-        animatables.AddRange(new Animatable[] { planetNavigator, guiButtonPrevious, guiButtonNext, guiButtonLaunch, guiSplashLoading });
+        animatables.Add(guiButtonPrevious);
+        animatables.Add(guiButtonNext);
+        animatables.Add(guiButtonLaunch);
+        animatables.Add(guiSplashLoading);
 
-        if (planetNavigator != null && planetNavigator.planetHub != null && guiCursorPrefab != null)
+        if (planetNavigator != null && planetNavigator.planetHub != null && guiCursorPrefab != null && !OVRManager.isHmdPresent)
         {
             List<GUICursor> guiCursorsInstances = new List<GUICursor>();
             foreach (PlanetMission planetMission in planetNavigator.planetHub.GetComponentsInChildren<PlanetMission>())
@@ -48,16 +54,15 @@ public class GUIMission : Interactable
                 cursor.target = planetMission.transform;
                 if(cursor.guiBackground != null)
                 {
-                    Debug.Log(string.Format(DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_")));
                     cursor.guiBackground.SetCaption(string.Format(DEFAULT_STRING_GUICURSOR_CAPTION_FORMAT, planetMission.mission.locationName.ToUpper().Replace(" ", "_")));
                 }
                 guiCursorsInstances.Add(cursor);
             }
 
-            guiSplashLoading.transform.SetAsLastSibling();
-
             guiCursors = guiCursorsInstances.ToArray();
         }
+
+        guiSplashLoading.transform.SetAsLastSibling();
 
         sceneToLoad = -1;
     }
@@ -68,7 +73,25 @@ public class GUIMission : Interactable
         {
             if (sceneToLoad < 0)
             {
+
                 int shift = Mathf.RoundToInt(Input.GetAxis("FormNavigate"));
+                if (shift == 0 && OVRManager.isHmdPresent)
+                {
+                    bool triggerLeft = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0 && !isTriggeredLeft);
+                    isTriggeredLeft = (triggerLeft) ? true : (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0);
+                    if(triggerLeft)
+                    {
+                        shift = -1;
+                    }
+
+                    bool triggerRight = (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0 && !isTriggeredRight);
+                    isTriggeredRight = (triggerRight) ? true : (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0);
+                    if (triggerRight)
+                    {
+                        shift = 1;
+                    }
+                }
+
                 if (shift != 0)
                 {
                     planetNavigator.SetMission(planetNavigator.selectedMissionIndex + shift);
@@ -76,7 +99,6 @@ public class GUIMission : Interactable
                     GUIButton pressed = (shift < 0) ? guiButtonPrevious : guiButtonNext;
                     if (pressed != null)
                     {
-                        pressed.direction = (shift < 0) ? pressed.transform.forward : new Vector3(0, 0, 1);
                         pressed.Animate();
                     }
                 }

@@ -123,6 +123,7 @@ public class OVRCameraRig : MonoBehaviour
 
 	private void UpdateAnchors()
 	{
+
 		EnsureGameObjectIntegrity();
 
 		if (!Application.isPlaying)
@@ -171,7 +172,7 @@ public class OVRCameraRig : MonoBehaviour
 		{
 			UpdatedAnchors(this);
 		}
-	}
+    }
 
 	public void EnsureGameObjectIntegrity()
 	{
