@@ -38,7 +38,7 @@ public class SettlementAirlockDecompression : MonoBehaviour {
     private IEnumerator DecompressAirlock ()
     {
         float start;
-        if (doorIn.GetComponent<SettlementAirlockDoor>().state == DoorState.Close)
+        if (!doorIn.GetComponent<SettlementDoor>().isOpened)
             start = 0;
         else
             start = 2.5f;
@@ -85,7 +85,7 @@ public class SettlementAirlockDecompression : MonoBehaviour {
     {
         yield return new WaitForSeconds(start);
         state = AirlockState.Decompressed;
-        doorOut.GetComponent<SettlementAirlockDoor>().OpenDoor();
+        doorOut.GetComponent<SettlementDoor>().Animate("open");
         environment.GetComponent<EnvironmentSound>().PlayAmbientSound();
     }
 }

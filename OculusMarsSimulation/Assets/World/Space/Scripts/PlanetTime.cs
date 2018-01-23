@@ -20,6 +20,8 @@ public class PlanetTime : MonoBehaviour
     public Material skyboxMaterial;
     public float skyboxExposureStart;
     public float skyboxExposureEnd;
+    public Color fogMidday;
+    public Color fogMidnight;
 
     public void Start()
     {
@@ -39,6 +41,8 @@ public class PlanetTime : MonoBehaviour
         {
             skyboxMaterial.SetFloat("_Exposure", Mathf.Lerp(skyboxExposureStart, skyboxExposureEnd, Mathf.Sin(timeScaled * Mathf.PI)));
         }
+
+        RenderSettings.fogColor = Color.Lerp(fogMidnight, fogMidday, Mathf.Sin(timeScaled * Mathf.PI));
     }
 
     public float GetCurrentTime()

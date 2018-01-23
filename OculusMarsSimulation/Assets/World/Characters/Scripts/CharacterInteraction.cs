@@ -10,6 +10,7 @@ public class CharacterInteraction : MonoBehaviour
     public Transform controllerRight;
     public GUIButton controllerRightButton;
 
+    public Trigger triggerAimed;
     public Item itemAimed;
     public Item itemGrabbed;
 
@@ -39,7 +40,11 @@ public class CharacterInteraction : MonoBehaviour
             
             if (isLeftPressed || isRightPressed)
             {
-                if (itemGrabbed == null)
+                if(triggerAimed != null)
+                {
+                    triggerAimed.isActivated = true;
+                }
+                else if(itemGrabbed == null)
                 {
                     Grab();
                 }
@@ -53,7 +58,7 @@ public class CharacterInteraction : MonoBehaviour
 
     public void GetAimed(Transform origin)
     {
-        if(origin != null && itemGrabbed == null)
+        if (origin != null && itemGrabbed == null)
         {
             RaycastHit hit;
             Ray ray = new Ray(origin.position, origin.forward);
@@ -61,10 +66,12 @@ public class CharacterInteraction : MonoBehaviour
             {
                 if (hit.distance <= range)
                 {
+                    triggerAimed = hit.collider.gameObject.GetComponent<Trigger>();
                     itemAimed = hit.collider.gameObject.GetComponent<Item>();
                 }
                 else
                 {
+                    triggerAimed = null;
                     itemAimed = null;
                 }
             }

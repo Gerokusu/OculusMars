@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
+    public string title;
     public List<Animatable> animatables;
 
     public bool CanInteract()

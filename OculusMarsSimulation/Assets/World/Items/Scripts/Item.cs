@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item : Interactable
 {
-    public string title;
     public uint mass;
 
     public Vector3 forceThrow;
