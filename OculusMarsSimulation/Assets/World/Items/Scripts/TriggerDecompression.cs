@@ -86,14 +86,14 @@ public class TriggerDecompression : Trigger
             doorOut.Animate("close", () =>
             {
                 state = TriggerDecompressionState.Adapting;
+                if (audioSourceAmbient != null)
+                {
+                    audioSourceAmbient.Stop();
+                }
                 areaDecompression.Animate("tointerior", () =>
                 {
                     areaDecompression.animationCurrent = 0;
                     state = TriggerDecompressionState.Interior;
-                    if (audioSourceAmbient != null)
-                    {
-                        audioSourceAmbient.Stop();
-                    }
                     doorIn.Animate("open");
                 });
             });

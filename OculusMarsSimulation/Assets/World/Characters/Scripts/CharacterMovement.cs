@@ -14,7 +14,9 @@ public class CharacterMovement : MonoBehaviour
     public uint cameraSensivity = 1;
 
     public Transform controllerLeft;
+    public Vector3 controllerLeftDefaultPosition;
     public Transform controllerRight;
+    public Vector3 controllerRightDefaultPosition;
 
     public void Update()
     {
@@ -31,6 +33,11 @@ public class CharacterMovement : MonoBehaviour
             if(!OVRManager.isHmdPresent)
             {
                 cameraTransform.Rotate(new Vector3(Input.GetAxis(DEFAULT_STRING_INPUT_LOOK_VERTICAL) * -cameraSensivity, 0, 0) * Time.deltaTime);
+                if(controllerLeft != null && controllerRight != null)
+                {
+                    controllerLeft.localPosition = controllerLeftDefaultPosition;
+                    controllerRight.localPosition = controllerRightDefaultPosition;
+                }
             }
         }
     }
