@@ -93,7 +93,7 @@ public class CharacterInteraction : MonoBehaviour
             itemGrabbedParent = itemGrabbed.transform.parent;
 
             itemGrabbed.transform.SetParent(controllerCenter);
-            itemGrabbed.transform.localPosition = new Vector3(0, 0, 0.5F);
+            itemGrabbed.transform.localPosition = new Vector3(0, -1.12F, 1);
 
             Rigidbody rigidbody = itemGrabbed.GetComponent<Rigidbody>();
             if (rigidbody != null)

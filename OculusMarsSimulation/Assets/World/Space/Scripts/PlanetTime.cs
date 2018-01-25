@@ -58,16 +58,16 @@ public class PlanetTime : MonoBehaviour
 
     public int GetCurrentHour(float time)
     {
-        return Mathf.RoundToInt(((time * timeMax) / DEFAULT_INT_SECONDS_IN_HOURS));
+        return Mathf.FloorToInt(((time * timeMax) / DEFAULT_INT_SECONDS_IN_HOURS));
     }
 
     public int GetCurrentMinute(float time)
     {
-        return Mathf.RoundToInt(((time * timeMax) / DEFAULT_INT_SECONDS_IN_MINUTES) % DEFAULT_INT_MINUTES_IN_HOURS);
+        return Mathf.FloorToInt(((time * timeMax) / DEFAULT_INT_SECONDS_IN_MINUTES) % DEFAULT_INT_MINUTES_IN_HOURS);
     }
 
     public int GetCurrentSecond(float time)
     {
-        return Mathf.RoundToInt((time * timeMax) % DEFAULT_INT_SECONDS_IN_MINUTES);
+        return Mathf.FloorToInt((time * timeMax) % DEFAULT_INT_SECONDS_IN_MINUTES);
     }
 }

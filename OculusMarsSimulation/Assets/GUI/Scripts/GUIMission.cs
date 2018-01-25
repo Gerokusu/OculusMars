@@ -103,7 +103,7 @@ public class GUIMission : Interactable
                     }
                 }
 
-                if (Input.GetButtonDown("FormAccept"))
+                if (Input.GetButtonDown("FormAccept") || OVRInput.Get(OVRInput.Button.One))
                 {
                     if (planetNavigator.selectedMission.mission.locationScene < SceneManager.sceneCountInBuildSettings)
                     {

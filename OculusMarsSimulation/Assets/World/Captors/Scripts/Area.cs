@@ -10,12 +10,15 @@ public class Area : Animatable
     public Area areaInterior;
     public Area areaExterior;
 
-    public void LateUpdate()
+    public void FixedUpdate()
     {
-        if(animationCurrent > 0 && (animationType == "tointerior" || animationType == "toexterior"))
+        animationCurrent = Mathf.Clamp(animationCurrent, 0, 1);
+
+        if(areaInterior != null && areaExterior != null)
         {
-            Area areaInitial = (animationType == "toexterior") ? areaInterior : areaExterior;
-            Area areaObjective = (animationType == "toexterior") ? areaExterior : areaInterior;
+            Area areaInitial = (isAnimating && animationType == "tointerior") ? areaExterior : areaInterior;
+            Area areaObjective = (isAnimating && animationType == "tointerior") ? areaInterior : areaExterior;
+            Debug.Log(Mathf.Lerp(areaInitial.temperature, areaObjective.temperature, animationCurrent));
             temperature = Mathf.Lerp(areaInitial.temperature, areaObjective.temperature, animationCurrent);
             pressure = Mathf.Lerp(areaInitial.pressure, areaObjective.pressure, animationCurrent);
             radiation = Mathf.Lerp(areaInitial.radiation, areaObjective.radiation, animationCurrent);

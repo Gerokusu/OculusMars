@@ -28,7 +28,7 @@ public class CharacterMovement : MonoBehaviour
         {
             walkingAnimation += Time.deltaTime * walkingSpeed / 2.0F;
 
-            float walkingAnimationCurrent = (Mathf.Sin(walkingAnimation * Mathf.PI) + 0.5F) * translation.magnitude * 0.03F; ;
+            float walkingAnimationCurrent = (Mathf.Sin(walkingAnimation * Mathf.PI) + 0.5F) * translation.magnitude * 0.01F; ;
             cameraTransform.localPosition = new Vector3(cameraTransform.localPosition.x, walkingAnimationCurrent, cameraTransform.localPosition.z);
             if(!OVRManager.isHmdPresent)
             {
