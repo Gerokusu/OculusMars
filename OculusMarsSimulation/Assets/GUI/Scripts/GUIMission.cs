@@ -62,6 +62,7 @@ public class GUIMission : Interactable
             guiCursors = guiCursorsInstances.ToArray();
         }
 
+        transform.SetAsLastSibling();
         guiSplashLoading.transform.SetAsLastSibling();
 
         sceneToLoad = -1;

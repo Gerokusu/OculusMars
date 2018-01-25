@@ -6,8 +6,8 @@ public class PlanetNavigator : MonoBehaviour
     public PlanetMission selectedMission;
     public int selectedMissionIndex;
 
-    private Vector2 positionInitialPlanet = new Vector2(0, 0);
-    private Vector3 positionInitialVectorUp = new Vector3(0, 1, 0);
+    //private Vector2 positionInitialPlanet = new Vector2(0, 0);
+    //private Vector3 positionInitialVectorUp = new Vector3(0, 1, 0);
 
     public void Start()
     {

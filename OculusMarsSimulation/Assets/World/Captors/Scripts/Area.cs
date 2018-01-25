@@ -18,7 +18,6 @@ public class Area : Animatable
         {
             Area areaInitial = (isAnimating && animationType == "tointerior") ? areaExterior : areaInterior;
             Area areaObjective = (isAnimating && animationType == "tointerior") ? areaInterior : areaExterior;
-            Debug.Log(Mathf.Lerp(areaInitial.temperature, areaObjective.temperature, animationCurrent));
             temperature = Mathf.Lerp(areaInitial.temperature, areaObjective.temperature, animationCurrent);
             pressure = Mathf.Lerp(areaInitial.pressure, areaObjective.pressure, animationCurrent);
             radiation = Mathf.Lerp(areaInitial.radiation, areaObjective.radiation, animationCurrent);

@@ -14,18 +14,15 @@ public class GUISplash : Animatable
     {
         if (guiBackground != null)
         {
-            if(isAnimating)
+            switch (animationType)
             {
-                switch(animationType)
-                {
-                    case "fadein":
-                        guiBackground.color = new Color(1, 1, 1, animationCurrent);
-                        break;
+                case "fadein":
+                    guiBackground.color = new Color(1, 1, 1, animationCurrent);
+                    break;
 
-                    case "fadeout":
-                        guiBackground.color = new Color(1, 1, 1, 1 - animationCurrent);
-                        break;
-                }
+                case "fadeout":
+                    guiBackground.color = new Color(1, 1, 1, 1 - animationCurrent);
+                    break;
             }
         }
     }
