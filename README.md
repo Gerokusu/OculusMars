@@ -6,7 +6,7 @@
 
 ## I - Contexte
 
-Ce projet s'inscrit dans le cadre d'un projet de fin d'études (PFE) de 3<sup>e</sup> année à l'ENSC de Bordeaux. Son objectif est la réalisation d'une application de simulation de sorties extra-véhiculaires sur la planète Mars, à destination de l'association Planète Mars, dont l'objectif est d’encourager l’exploration et l'accession de la cette planète par l'humanité.
+Ce projet s'inscrit dans le cadre d'un projet de fin d'études (PFE) de 3e année à l'ENSC de Bordeaux. Son objectif est la réalisation d'une application de simulation de sorties extra-véhiculaires sur la planète Mars, à destination de l'association Planète Mars, dont la visée est l'encouragement de l’exploration de cette planète et la sensibilisation du public à cet égard.
 
 ## II - Spécifications
 
